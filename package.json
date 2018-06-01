@@ -2,12 +2,10 @@
   "name": "presentation-generator",
   "version": "0.1.1",
   "description": "",
-  "main": "src/main.js",
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.js --mode development",
-    "webpack": "webpack --config ./webpack.config.js",
-    "test": "echo \"No test specified\" && exit 0",
-    "electron": "electron ."
+    "webpack": "webpack -w",
+    "test": "echo \"No test specified\" && exit 0"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +21,6 @@
     "webpack-dev-server": "^3.1.0"
   },
   "dependencies": {
-    "electron": "^2.0.2",
     "monaco-editor-webpack-plugin": "^1.2.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

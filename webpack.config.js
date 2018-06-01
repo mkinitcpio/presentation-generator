@@ -2,10 +2,11 @@ const webpack = require('webpack');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = {
-  entry: ['./src/index.tsx'],
+  entry: './src/index.tsx',
+  mode: 'development',
   devtool: "source-map",
   output: {
-    path: __dirname + 'dist',
+    path: __dirname + '/dist',
     filename: 'bundle.js'
   },
   module: {
@@ -30,6 +31,7 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js']
   },
   plugins: [
+    new webpack.optimize.LimitChunkCountPlugin({maxChunks:1}),
     new MonacoWebpackPlugin()
   ],
   devServer: {

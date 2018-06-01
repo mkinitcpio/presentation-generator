@@ -2,41 +2,57 @@ import * as ReactDOM from 'react-dom';
 import MonacoEditor from 'react-monaco-editor';
 import * as React from 'react';
 
+import * as ts from 'typescript';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      code: '// type your code...',
+      code: '',
     }
+    this.onCompileButtonClick = this.onCompileButtonClick.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
-  editorDidMount(editor, monaco) {
-    console.log('editorDidMount', editor);
-    editor.focus();
-  }
+
   onChange(newValue, e) {
-    console.log('onChange', newValue, e);
+    this.setState({
+      code: newValue
+    });
   }
-  render() {
+
+  onCompileButtonClick() {
     const code = (this.state as any).code;
+    const compilerOptions = {
+      compilerOptions: {
+        module: ts.ModuleKind.CommonJS
+      }
+    };
+    
+    const compiledCode = ts.transpileModule(code, compilerOptions).outputText;
+    console.log(compiledCode);
+  }
+
+  render() {
     const options = {
       selectOnLineNumbers: true
     };
-      return (
+    return (
+      <div>
+        <button onClick={this.onCompileButtonClick}>compile</button>
         <MonacoEditor
-        width="800"
-        height="600"
-        language="javascript"
-        theme="vs-dark"
-        value={code}
-        options={options}
-        onChange={this.onChange}
-        editorDidMount={this.editorDidMount}
-      />
-      );
+          width="800"
+          height="600"
+          language="typescript"
+          theme="vs-dark"
+          options={options}
+          onChange={this.onChange}
+        />
+      </div>
+    );
   }
 }
 
 ReactDOM.render(
-  <App/>,
+  <App />,
   document.getElementById('app')
 );
