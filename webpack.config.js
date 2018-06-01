@@ -1,8 +1,9 @@
 const webpack = require('webpack');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
-console.log(__dirname);
+
 module.exports = {
-  entry: ['./src/index.js'],
+  entry: ['./src/index.tsx'],
+  devtool: "source-map",
   output: {
     path: __dirname + 'dist',
     filename: 'bundle.js'
@@ -10,9 +11,14 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: ['babel-loader']
+        test: /\.tsx?$/,
+        loader: "ts-loader",
+        exclude: /node_modules/
+      },
+      {
+        enforce: "pre",
+        test: /\.js$/,
+        loader: "source-map-loader"
       },
       {
         test: /\.css$/,
@@ -21,16 +27,13 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx']
+    extensions: ['.ts', '.tsx', '.js']
   },
   plugins: [
-    new MonacoWebpackPlugin(),
+    new MonacoWebpackPlugin()
   ],
-  node: {
-    dgram: 'empty',
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty',
-    child_process: 'empty',
-  },
+  devServer: {
+    contentBase: __dirname + '/dist',
+    hot: false
+  }
 };
