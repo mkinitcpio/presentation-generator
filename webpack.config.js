@@ -1,5 +1,13 @@
+const path = require('path');
 const webpack = require('webpack');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
+  template: './src/index.html',
+  filename: 'index.html',
+  inject: 'body'
+});
 
 module.exports = {
   entry: './src/index.tsx',
@@ -9,18 +17,21 @@ module.exports = {
     path: __dirname + '/dist',
     filename: 'bundle.js'
   },
+  node: {
+    fs: 'empty',
+    module: "empty"
+  },
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.tsx?$/,
         loader: "ts-loader",
         exclude: /node_modules/
       },
-      {
-        enforce: "pre",
-        test: /\.js$/,
-        loader: "source-map-loader"
-      },
+      // {
+      //   enforce: "pre",
+      //   test: /\.js$/,
+      //   loader: "source-map-loader"
+      // },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
@@ -31,11 +42,14 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js']
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({maxChunks:1}),
-    new MonacoWebpackPlugin()
-  ],
-  devServer: {
-    contentBase: __dirname + '/dist',
-    hot: false
-  }
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1
+    }),
+    new MonacoWebpackPlugin(),
+    new webpack.ContextReplacementPlugin(
+      /monaco-editor(\\|\/)esm(\\|\/)vs(\\|\/)editor(\\|\/)common(\\|\/)services/,
+      __dirname
+    ),
+    HtmlWebpackPluginConfig
+  ]
 };

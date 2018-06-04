@@ -27,12 +27,14 @@ class App extends React.Component {
         module: ts.ModuleKind.CommonJS
       }
     };
-    
+
     const compiledCode = ts.transpileModule(code, compilerOptions).outputText;
     console.log(compiledCode);
   }
 
   render() {
+    console.log('render');
+
     const options = {
       selectOnLineNumbers: true
     };
